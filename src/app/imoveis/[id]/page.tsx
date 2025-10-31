@@ -1,15 +1,16 @@
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { listings } from '@/lib/data'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { Gallery } from './Gallery'
 
 export default async function ListingDetailPage({ params }: { params: { id: string } }) {
   let listing: any | null = null
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/listings/${params.id}`, { cache: 'no-store' })
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL || 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/listings/${params.id}`, { cache: 'no-store' })
     if (res.ok) { const data = await res.json(); listing = data.listing }
   } catch {}
   if (!listing) { listing = listings.find(l => (l as any).id === params.id) }
@@ -19,16 +20,7 @@ export default async function ListingDetailPage({ params }: { params: { id: stri
     <div className="mx-auto max-w-6xl px-4 py-10">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div>
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
-            <Image src={listing.coverImage} alt={listing.title} fill className="object-cover cursor-zoom-in" />
-          </div>
-          <div className="mt-3 grid grid-cols-3 gap-3">
-            {(listing.gallery || []).map((src: string, i: number) => (
-              <div key={i} className="relative aspect-[4/3] overflow-hidden rounded-md">
-                <Image src={src} alt={listing.title + ' ' + (i+1)} fill className="object-cover" />
-              </div>
-            ))}
-          </div>
+          <Gallery coverImage={listing.coverImage} gallery={listing.gallery || []} title={listing.title} />
         </div>
         <div>
           <h1 className="text-3xl font-semibold leading-tight">{listing.title}</h1>
