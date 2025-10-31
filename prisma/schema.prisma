@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  logoUrl   String?
+  photoUrl  String?
+  aboutIntro String?
+  creci     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Listing {
+  id           String   @id @default(cuid())
+  title        String
+  neighborhood String
+  city         String
+  type         String // 'Casa' | 'Apartamento'
+  bedrooms     Int
+  bathrooms    Int
+  area         Int // m²
+  price        Int // BRL cents
+  coverImage   String
+  gallery      String // JSON array as string
+  status       String // 'novo-lancamento' | 'em-destaque' | 'vendido'
+  tags         String // JSON array as string
+  description  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+

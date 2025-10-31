@@ -1,11 +1,13 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  label?: string
+}
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type = 'text', ...props }, ref) => {
-    return (
+  ({ className, type = 'text', label, ...props }, ref) => {
+    const input = (
       <input
         ref={ref}
         type={type}
@@ -13,6 +15,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {...props}
       />
     )
+    if (label) {
+      return (
+        <div>
+          <label className="mb-2 block text-sm font-medium">{label}</label>
+          {input}
+        </div>
+      )
+    }
+    return input
   }
 )
 Input.displayName = 'Input'

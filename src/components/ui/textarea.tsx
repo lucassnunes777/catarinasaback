@@ -1,11 +1,13 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
-export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>
+export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  label?: string
+}
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, rows = 4, ...props }, ref) => {
-    return (
+  ({ className, rows = 4, label, ...props }, ref) => {
+    const textarea = (
       <textarea
         ref={ref}
         rows={rows}
@@ -13,6 +15,15 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {...props}
       />
     )
+    if (label) {
+      return (
+        <div>
+          <label className="mb-2 block text-sm font-medium">{label}</label>
+          {textarea}
+        </div>
+      )
+    }
+    return textarea
   }
 )
 Textarea.displayName = 'Textarea'

@@ -1,11 +1,18 @@
 import { cookies } from 'next/headers'
+import bcrypt from 'bcryptjs'
+import { db } from './db'
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'catarina@sabackimoveis.com'
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Saback#2025!'
 const SESSION_COOKIE = 'admin_session'
 
 export async function verifyCredentials(email: string, password: string) {
-  return email === ADMIN_EMAIL && password === ADMIN_PASSWORD
+  try {
+    const user = await db.user.findUnique({ where: { email } })
+    if (!user) return false
+    return await bcrypt.compare(password, user.password)
+  } catch (error) {
+    console.error('Error verifying credentials:', error)
+    return false
+  }
 }
 
 export function setSession() {
