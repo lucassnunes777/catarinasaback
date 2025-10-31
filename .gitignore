@@ -1,0 +1,12 @@
+﻿node_modules/
+.next/
+.env*
+prisma/dev.db*
+dist/
+out/
+*.log
+
+node_modules/
+.next/
+.env*
+prisma/dev.db*
